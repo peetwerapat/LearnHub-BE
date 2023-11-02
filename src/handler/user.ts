@@ -2,15 +2,41 @@ import { RequestHandler } from "express";
 import { IUserHandler } from ".";
 import { ICreateUserDto, IUserDto } from "../dto/user";
 import { IUserRepository } from "../repositories";
-import { hashPassword } from "../utils/bcrypt";
+import { hashPassword, verifyPassword } from "../utils/bcrypt";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { JWT_SECRET } from "../utils/const";
+import { sign } from "jsonwebtoken";
 
 export default class UserHandler implements IUserHandler {
   constructor(private repo: IUserRepository) {
     this.repo = repo;
   }
 
-  //registration: RequestHandler<{}, IUserDto | IErrorDto, ICreateUserDto> // * Full Syntax
+  public login: IUserHandler["login"] = async (req, res) => {
+    const { username, password: plainPassword } = req.body;
+    try {
+      const { password, id } = await this.repo.findByUsername(username);
+
+      if (!verifyPassword(plainPassword, password))
+        throw new Error("Invalid username or password");
+
+      const accessToken = sign({ id: id }, JWT_SECRET, {
+        algorithm: "HS512",
+        expiresIn: "12h",
+        issuer: "Learnhub-api",
+        subject: "user-credential",
+      });
+
+      return res.status(200).json({ accessToken }).end();
+    } catch (error) {
+      return res
+        .status(401)
+        .json({ message: "Invalid username or password" })
+        .end();
+    }
+  };
+
+  //public registration: RequestHandler<{}, IUserDto | IErrorDto, ICreateUserDto> // * Full Syntax
   public registration: IUserHandler["registration"] = async (req, res) => {
     // * Full Syntax
     // const name = req.body.name
