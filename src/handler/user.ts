@@ -12,6 +12,25 @@ export default class UserHandler implements IUserHandler {
     this.repo = repo;
   }
 
+  public selfcheck: IUserHandler["selfcheck"] = async (req, res) => {
+    try {
+      const { registeredAt, ...others } = await this.repo.findById(
+        res.locals.user.id
+      );
+
+      return res
+        .status(200)
+        .json({ ...others, registeredAt: registeredAt.toISOString() })
+        .end();
+    } catch (error) {
+      console.error(error);
+
+      return res.status(500).send({
+        message: "Internal Server Error",
+      });
+    }
+  };
+
   public login: IUserHandler["login"] = async (req, res) => {
     const { username, password: plainPassword } = req.body;
     try {
