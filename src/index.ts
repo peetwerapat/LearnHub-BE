@@ -34,6 +34,8 @@ app.use("/auth", authRouter);
 
 authRouter.post("/login", userHandler.login);
 
+authRouter.post("/me", jwtMiddleware.auth, userHandler.selfcheck);
+
 app.listen(PORT, () => {
   console.log(`LearnHub API is up at ${PORT}`);
 });
