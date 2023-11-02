@@ -9,24 +9,14 @@ export default class UserRepository implements IUserRepository {
   }
 
   public async create(user: ICreateUserDto): Promise<IUser> {
-    try {
-      return await this.prisma.user.create({
-        data: user,
-        select: {
-          id: true,
-          name: true,
-          username: true,
-          registeredAt: true,
-        },
-      });
-    } catch (error) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === "P2002"
-      )
-        throw new Error(`UNIQUE: username`);
-
-      throw new Error(`${error}`);
-    }
+    return await this.prisma.user.create({
+      data: user,
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        registeredAt: true,
+      },
+    });
   }
 }
