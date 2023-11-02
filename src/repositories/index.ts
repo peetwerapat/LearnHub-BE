@@ -8,17 +8,6 @@ export interface IUser {
   registeredAt: Date;
 }
 
-type CreationErrorType = "UNIQUE";
-
-export class UserCreationError extends Error {
-  constructor(
-    public readonly type: CreationErrorType,
-    public readonly column: string
-  ) {
-    super();
-  }
-}
-
 // * ExSyntax Choice 2 for IUser
 // export interface IUserExtended
 //   extends Pick<User, "id" | "name" | "username" | "registeredAt"> {}
