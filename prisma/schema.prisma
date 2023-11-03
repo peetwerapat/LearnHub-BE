@@ -30,6 +30,6 @@ model Content {
   creatorUrl   String
   createdAt    DateTime @default(now())
   updateAt     DateTime @default(now())
-  User         User     @relation(fields: [ownerId], references: [id])
+  postedBy     User     @relation(fields: [ownerId], references: [id])
   ownerId      String   @db.Uuid
 }

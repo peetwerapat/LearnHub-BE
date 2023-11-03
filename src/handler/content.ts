@@ -4,12 +4,20 @@ import { IContentDto, ICreateContentDto } from "../dto/content";
 import { IErrorDto } from "../dto/error";
 import { AuthStatus } from "../middleware/jwt";
 import { IContentRepository } from "../repositories";
+import { getOEmbedInfo } from "../utils/oembed";
 
 export default class ContentHandler implements IContentHandler {
   private repo: IContentRepository;
   constructor(repo: IContentRepository) {
     this.repo = repo;
   }
+
+  public getAll: IContentHandler["getAll"] = async (req, res) => {
+    const result = await this.repo.getAll();
+
+    return res.status(200).json(result).end();
+  };
+
   create: IContentHandler["create"] = async (req, res) => {
     const { rating, videoUrl, comment } = req.body;
 
@@ -19,17 +27,21 @@ export default class ContentHandler implements IContentHandler {
         .json({ message: "rating is out of range 0-5" })
         .end();
 
+    const { author_name, url, thumbnail_url, title } = await getOEmbedInfo(
+      videoUrl
+    );
+
     const {
-      User: { registeredAt, id, username, name },
+      postedBy: { registeredAt, id, username, name },
       ...contentData
     } = await this.repo.create(res.locals.user.id, {
       rating,
       videoUrl,
       comment,
-      creatorName: "",
-      creatorUrl: "",
-      thumbnailUrl: "",
-      videoTitle: "",
+      creatorName: author_name,
+      creatorUrl: url,
+      thumbnailUrl: thumbnail_url,
+      videoTitle: title,
     });
 
     return res
@@ -40,7 +52,7 @@ export default class ContentHandler implements IContentHandler {
           id,
           username,
           name,
-          registeredAt: registeredAt.toISOString(),
+          registeredAt,
         },
       })
       .end();

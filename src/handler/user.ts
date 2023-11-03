@@ -20,7 +20,7 @@ export default class UserHandler implements IUserHandler {
 
       return res
         .status(200)
-        .json({ ...others, registeredAt: registeredAt.toISOString() })
+        .json({ ...others, registeredAt })
         .end();
     } catch (error) {
       console.error(error);
@@ -87,7 +87,7 @@ export default class UserHandler implements IUserHandler {
         .json({
           id: registerId,
           name: registerName,
-          registeredAt: `${registeredAt}`,
+          registeredAt,
           username: registerUsername,
         })
         .end();
