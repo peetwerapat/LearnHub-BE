@@ -20,6 +20,7 @@ export interface IUserHandler {
     unknown,
     AuthStatus
   >;
+  getByUsername: RequestHandler<{ username: string }, IUserDto | IErrorDto>;
 }
 
 export interface IContentHandler {
