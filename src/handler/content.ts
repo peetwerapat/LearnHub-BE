@@ -8,6 +8,7 @@ import { getOEmbedInfo } from "../utils/oembed";
 import mapToDto from "../utils/content.mapper";
 import contentMapper from "../utils/content.mapper";
 import { IUpdateContent } from "../repositories";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export default class ContentHandler implements IContentHandler {
   private repo: IContentRepository;
@@ -69,21 +70,53 @@ export default class ContentHandler implements IContentHandler {
   };
 
   public updateById: IContentHandler["updateById"] = async (req, res) => {
-    const { comment, rating } = req.body;
+    try {
+      const { id } = req.params;
+      const { comment, rating } = req.body;
 
-    if (typeof comment !== "string")
-      return res
-        .status(400)
-        .json({ message: "comment is invalid text type" })
-        .end();
+      const numericId = Number(id);
 
-    if (isNaN(Number(rating)) || rating > 5 || rating < 0)
-      return res.status(400).send({ message: "rating is invalid" });
+      if (isNaN(numericId))
+        return res.status(400).json({ message: "id is invalid" }).end();
 
-    const result = await this.repo.partialUpdate(Number(req.params.id), {
-      comment,
-      rating,
-    });
-    return res.status(200).json(result);
+      const {
+        postedBy: { id: ownerId },
+      } = await this.repo.getById(numericId);
+
+      if (ownerId !== res.locals.user.id)
+        return res
+          .status(403)
+          .json({ message: "Request content is forbidden" })
+          .end();
+
+      if (typeof comment !== "string")
+        return res
+          .status(400)
+          .json({ message: "comment is invalid text type" })
+          .end();
+
+      if (isNaN(Number(rating)) || rating > 5 || rating < 0)
+        return res.status(400).send({ message: "rating is invalid" });
+
+      const result = await this.repo.partialUpdate(Number(req.params.id), {
+        comment,
+        rating,
+      });
+      return res.status(200).json(result).end();
+    } catch (error) {
+      console.error(error);
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === "P2025"
+      )
+        return res.status(410).json({ message: "content not found" }).end();
+
+      if (error instanceof TypeError)
+        return res.status(400).json({ message: error.message }).end();
+
+      return res.status(500).json({
+        message: `Internal Server Error`,
+      });
+    }
   };
 }
