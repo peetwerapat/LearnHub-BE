@@ -70,39 +70,38 @@ export default class ContentHandler implements IContentHandler {
   };
 
   public updateById: IContentHandler["updateById"] = async (req, res) => {
-    const { comment, rating } = req.body;
-
-    if (typeof comment !== "string")
-      return res
-        .status(400)
-        .json({ message: "comment is invalid text type" })
-        .end();
-
-    if (isNaN(Number(rating)) || rating > 5 || rating < 0)
-      return res.status(400).send({ message: "rating is invalid" });
-
-    const result = await this.repo.partialUpdate(Number(req.params.id), {
-      comment,
-      rating,
-    });
-    return res.status(200).json(result).end();
-  };
-
-  public deleteById: IContentHandler["deleteById"] = async (req, res) => {
     try {
-      if (isNaN(Number(req.params.id)))
-        return res.status(400).json({ message: "id is invalid" });
+      const { id } = req.params;
+      const { comment, rating } = req.body;
+
+      const numericId = Number(id);
+
+      if (isNaN(numericId))
+        return res.status(400).json({ message: "id is invalid" }).end();
 
       const {
         postedBy: { id: ownerId },
-      } = await this.repo.getById(Number(req.params.id));
+      } = await this.repo.getById(numericId);
+
       if (ownerId !== res.locals.user.id)
         return res
           .status(403)
-          .json({ message: "You're not the owner of this content!" });
+          .json({ message: "Request content is forbidden" })
+          .end();
 
-      const result = await this.repo.delete(Number(req.params.id));
+      if (typeof comment !== "string")
+        return res
+          .status(400)
+          .json({ message: "comment is invalid text type" })
+          .end();
 
+      if (isNaN(Number(rating)) || rating > 5 || rating < 0)
+        return res.status(400).send({ message: "rating is invalid" });
+
+      const result = await this.repo.partialUpdate(Number(req.params.id), {
+        comment,
+        rating,
+      });
       return res.status(200).json(result).end();
     } catch (error) {
       console.error(error);

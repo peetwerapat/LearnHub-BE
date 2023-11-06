@@ -36,7 +36,9 @@ export interface IContentHandler {
   updateById: RequestHandler<
     { id: string },
     IContentDto | IErrorDto,
-    IUpdateContentDto
+    IUpdateContentDto,
+    undefined,
+    AuthStatus
   >;
   deleteById: RequestHandler<
     { id: string },
