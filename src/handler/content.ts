@@ -66,4 +66,11 @@ export default class ContentHandler implements IContentHandler {
       return res.status(500).json({ message: "Internal Server Error" }).end();
     }
   };
+
+  // public updateById: IContentHandler["updateById"] = async (req, res) => {
+  //   const { comment, rating } = req.body;
+
+  //   if (typeof comment !== "string")
+  //   return res.status(400).send("comment is not a string")
+  // };
 }

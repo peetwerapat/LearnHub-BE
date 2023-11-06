@@ -1,5 +1,5 @@
 import { Content, PrismaClient } from "@prisma/client";
-import { IContent, IContentRepository, ICreatContent } from ".";
+import { IContent, IContentRepository, ICreatContent, IUpdateContent } from ".";
 
 export default class ContentRepository implements IContentRepository {
   constructor(private prisma: PrismaClient) {
