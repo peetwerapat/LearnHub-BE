@@ -6,6 +6,7 @@ import { AuthStatus } from "../middleware/jwt";
 import { IContentRepository } from "../repositories";
 import { getOEmbedInfo } from "../utils/oembed";
 import mapToDto from "../utils/content.mapper";
+import contentMapper from "../utils/content.mapper";
 
 export default class ContentHandler implements IContentHandler {
   private repo: IContentRepository;
@@ -19,11 +20,18 @@ export default class ContentHandler implements IContentHandler {
     return res.status(200).json(result).end();
   };
 
-  // public getById: IContentHandler["getById"] = async (req, res) => {
-  //   const { id } = req.params;
+  public getById: IContentHandler["getById"] = async (req, res) => {
+    const { id } = req.params;
 
-  //   const numbericId = Number(id);
-  // };
+    const numericId = Number(id);
+
+    if (isNaN(numericId))
+      return res.status(400).json({ message: "id is invalid" }).end();
+
+    const content = await this.repo.getById(numericId);
+
+    return res.status(200).json(contentMapper(content)).end();
+  };
 
   create: IContentHandler["create"] = async (req, res) => {
     const { rating, videoUrl, comment } = req.body;
