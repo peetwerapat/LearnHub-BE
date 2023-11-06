@@ -41,4 +41,8 @@ export default class ContentRepository implements IContentRepository {
       },
     });
   }
+
+  // public getById(id: string): Promise<IContent> {
+  //   return this.prisma.content.findUniqueOrThrow({});
+  // }
 }
