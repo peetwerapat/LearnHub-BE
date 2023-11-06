@@ -1,5 +1,5 @@
 import { Content, PrismaClient } from "@prisma/client";
-import { IContent, IContentRepository, ICreatContent } from ".";
+import { IContent, IContentRepository, ICreatContent, IUpdateContent } from ".";
 
 export default class ContentRepository implements IContentRepository {
   constructor(private prisma: PrismaClient) {
@@ -44,5 +44,12 @@ export default class ContentRepository implements IContentRepository {
 
   // public getById(id: string): Promise<IContent> {
   //   return this.prisma.content.findUniqueOrThrow({});
+  // }
+
+  // public partialUpdate(id: string, data: IUpdateContent): Promise<IContent> {
+  //   return this.prisma.content.update({
+  //     where: { id: id },
+  //     data: data,
+  //   });
   // }
 }
