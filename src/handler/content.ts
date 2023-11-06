@@ -7,6 +7,7 @@ import { IContentRepository } from "../repositories";
 import { getOEmbedInfo } from "../utils/oembed";
 import mapToDto from "../utils/content.mapper";
 import contentMapper from "../utils/content.mapper";
+import { IUpdateContent } from "../repositories";
 
 export default class ContentHandler implements IContentHandler {
   private repo: IContentRepository;
@@ -36,7 +37,7 @@ export default class ContentHandler implements IContentHandler {
   create: IContentHandler["create"] = async (req, res) => {
     const { rating, videoUrl, comment } = req.body;
 
-    if (rating > 5 || rating < 0)
+    if (isNaN(Number(rating)) || rating > 5 || rating < 0)
       return res
         .status(400)
         .json({ message: "rating is out of range 0-5" })
@@ -67,10 +68,22 @@ export default class ContentHandler implements IContentHandler {
     }
   };
 
-  // public updateById: IContentHandler["updateById"] = async (req, res) => {
-  //   const { comment, rating } = req.body;
+  public updateById: IContentHandler["updateById"] = async (req, res) => {
+    const { comment, rating } = req.body;
 
-  //   if (typeof comment !== "string")
-  //   return res.status(400).send("comment is not a string")
-  // };
+    if (typeof comment !== "string")
+      return res
+        .status(400)
+        .json({ message: "comment is invalid text type" })
+        .end();
+
+    if (isNaN(Number(rating)) || rating > 5 || rating < 0)
+      return res.status(400).send({ message: "rating is invalid" });
+
+    const result = await this.repo.partialUpdate(Number(req.params.id), {
+      comment,
+      rating,
+    });
+    return res.status(200).json(result);
+  };
 }
