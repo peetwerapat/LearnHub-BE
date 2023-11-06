@@ -57,4 +57,21 @@ export default class ContentRepository implements IContentRepository {
       },
     });
   }
+
+  public partialUpdate(id: number, data: IUpdateContent): Promise<IContent> {
+    return this.prisma.content.update({
+      where: { id },
+      data: data,
+      include: {
+        postedBy: {
+          select: {
+            id: true,
+            username: true,
+            name: true,
+            registeredAt: true,
+          },
+        },
+      },
+    });
+  }
 }

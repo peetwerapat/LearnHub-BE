@@ -28,13 +28,14 @@ export interface IContent extends Omit<Content, "ownerId"> {
   postedBy: IUser;
 }
 
-// export interface IUpdateContent {
-//   comment?: string;
-//   rating?: number;
-// }
+export interface IUpdateContent {
+  comment?: string;
+  rating?: number;
+}
 
 export interface IContentRepository {
   getAll(): Promise<IContent[]>;
   create(ownerId: string, content: ICreatContent): Promise<IContent>;
   getById(id: number): Promise<IContent>;
+  partialUpdate(id: number, data: IUpdateContent): Promise<IContent>;
 }
