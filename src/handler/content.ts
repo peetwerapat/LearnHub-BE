@@ -84,6 +84,12 @@ export default class ContentHandler implements IContentHandler {
       comment,
       rating,
     });
-    return res.status(200).json(result);
+    return res.status(200).json(result).end();
+  };
+
+  public deleteById: IContentHandler["deleteById"] = async (req, res) => {
+    const result = await this.repo.delete(Number(req.params.id));
+
+    return res.status(200).json(result).end();
   };
 }
