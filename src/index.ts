@@ -49,6 +49,8 @@ contentRouter.post("/", jwtMiddleware.auth, contentHandler.create);
 
 contentRouter.get("/", contentHandler.getAll);
 
+contentRouter.get("/:id", contentHandler.getById);
+
 app.listen(PORT, () => {
   console.log(`LearnHub API is up at ${PORT}`);
 });

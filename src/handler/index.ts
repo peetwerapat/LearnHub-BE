@@ -27,6 +27,5 @@ export interface IContentHandler {
     undefined,
     AuthStatus
   >;
-  // getById: RequestHandler<{ id: string }, IContentDto | IErrorDto>;
-  // updateById: RequestHandler<{ id: string }, IContentDto | IErrorDto>;
+  getById: RequestHandler<{ id: string }, IContentDto | IErrorDto>;
 }

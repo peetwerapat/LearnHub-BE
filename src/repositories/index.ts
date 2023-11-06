@@ -36,6 +36,5 @@ export interface IContent extends Omit<Content, "ownerId"> {
 export interface IContentRepository {
   getAll(): Promise<IContent[]>;
   create(ownerId: string, content: ICreatContent): Promise<IContent>;
-  // getById(id: string): Promise<IContent>;
-  // partialUpdate(id: string, data: IUpdateContent): Promise<IContent>;
+  getById(id: number): Promise<IContent>;
 }
