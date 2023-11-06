@@ -1,13 +1,18 @@
 import axios, { AxiosError } from "axios";
-import { OEmBedDto } from "../dto/oembed";
+import { OEmBedDto, OEmbedError } from "../dto/oembed";
+
+const isError = (data: OEmBedDto | OEmbedError): data is OEmbedError =>
+  Object.keys(data).includes("error");
 
 export const getOEmbedInfo = async (videoUrl: string): Promise<OEmBedDto> => {
   const res = await axios.get<OEmBedDto>(
     `https://noembed.com/embed?url=${videoUrl}`
   );
 
-  const { author_name, url, thumbnail_url, title, error } = res.data;
-  if (error) throw new URIError("Invalid video link");
+  const oembedData = res.data;
+  if (isError(oembedData)) throw new URIError("Invalid video link");
 
-  return { author_name, url, thumbnail_url, title, error };
+  const { author_name, url, thumbnail_url, title } = oembedData;
+
+  return { author_name, url, thumbnail_url, title };
 };

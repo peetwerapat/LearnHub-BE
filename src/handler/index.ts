@@ -9,7 +9,7 @@ import { Content } from "@prisma/client";
 export interface IUserHandler {
   registration: RequestHandler<{}, IUserDto | IErrorDto, ICreateUserDto>;
   login: RequestHandler<{}, ICredentialDto | IErrorDto, ILoginDto>;
-  selfcheck: RequestHandler<
+  gerPersonalInfo: RequestHandler<
     {},
     IUserDto | IErrorDto,
     unknown,
@@ -27,4 +27,5 @@ export interface IContentHandler {
     undefined,
     AuthStatus
   >;
+  // getById: RequestHandler<{ id: string }, IContentDto | IErrorDto>;
 }

@@ -12,7 +12,10 @@ export default class UserHandler implements IUserHandler {
     this.repo = repo;
   }
 
-  public selfcheck: IUserHandler["selfcheck"] = async (req, res) => {
+  public gerPersonalInfo: IUserHandler["gerPersonalInfo"] = async (
+    req,
+    res
+  ) => {
     try {
       const { registeredAt, ...others } = await this.repo.findById(
         res.locals.user.id
