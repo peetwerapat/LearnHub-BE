@@ -20,6 +20,7 @@ export interface IUserHandler {
     unknown,
     AuthStatus
   >;
+  getByUsername: RequestHandler<{ username: string }, IUserDto | IErrorDto>;
 }
 
 export interface IContentHandler {
@@ -36,6 +37,13 @@ export interface IContentHandler {
     { id: string },
     IContentDto | IErrorDto,
     IUpdateContentDto,
+    undefined,
+    AuthStatus
+  >;
+  deleteById: RequestHandler<
+    { id: string },
+    IContentDto | IErrorDto,
+    undefined,
     undefined,
     AuthStatus
   >;

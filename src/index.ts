@@ -33,6 +33,8 @@ app.use("/user", userRouter);
 
 userRouter.post("/", userHandler.registration);
 
+userRouter.get("/:username", userHandler.getByUsername);
+
 const authRouter = express.Router();
 
 app.use("/auth", authRouter);
@@ -52,6 +54,8 @@ contentRouter.get("/", contentHandler.getAll);
 contentRouter.get("/:id", contentHandler.getById);
 
 contentRouter.patch("/:id", jwtMiddleware.auth, contentHandler.updateById);
+
+contentRouter.delete("/:id", jwtMiddleware.auth, contentHandler.deleteById);
 
 app.listen(PORT, () => {
   console.log(`LearnHub API is up at ${PORT}`);

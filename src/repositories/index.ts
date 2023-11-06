@@ -38,4 +38,5 @@ export interface IContentRepository {
   create(ownerId: string, content: ICreatContent): Promise<IContent>;
   getById(id: number): Promise<IContent>;
   partialUpdate(id: number, data: IUpdateContent): Promise<IContent>;
+  delete(id: number): Promise<IContent>;
 }
