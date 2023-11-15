@@ -8,7 +8,9 @@ jobs:
     steps:
       - name: Echo hello-world
         run: echo "Hello world"
-      - name: Where i am here?
+      - name: Print out current directory
         run: pwd
-      - name: Why
+      - name: Check out
+        uses: actions/checkout@main
+      - name: list file and directory
         run: ls
