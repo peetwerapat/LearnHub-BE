@@ -40,3 +40,8 @@ export interface IContentRepository {
   partialUpdate(id: number, data: IUpdateContent): Promise<IContent>;
   delete(id: number): Promise<IContent>;
 }
+
+export interface IBlacklistRepository {
+  addToBlacklist(token: string, exp: number): Promise<void>;
+  isAlreadyBlacklisted(token: string): Promise<boolean>;
+}

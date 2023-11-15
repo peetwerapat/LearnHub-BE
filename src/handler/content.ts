@@ -38,7 +38,7 @@ export default class ContentHandler implements IContentHandler {
   create: IContentHandler["create"] = async (req, res) => {
     const { rating, videoUrl, comment } = req.body;
 
-    if (isNaN(Number(rating)) || rating > 5 || rating < 0)
+    if (isNaN(Number(rating)) || rating < 0 || rating > 5)
       return res
         .status(400)
         .json({ message: "rating is out of range 0-5" })
