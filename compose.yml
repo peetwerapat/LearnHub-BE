@@ -1,8 +1,10 @@
 version: "3.8"
 services:
   api:
-    image: peetwerapat/be-project:ci.build-docker-image-
+    # image: peetwerapat/be-project:ci.build-docker-image-
+    build: .
     platform: linux/amd64
+
     environment:
       - DATABASE_URL=postgresql://postgres:academy@pg-db:5432/mydb?schema=public
       - PORT=8080

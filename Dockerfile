@@ -25,6 +25,7 @@ COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 
+
 RUN npm install -g pnpm@8.6.2 && pnpm install --frozen-lockfile
 
 EXPOSE 8080
