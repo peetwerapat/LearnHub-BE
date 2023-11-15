@@ -9,11 +9,12 @@ import {
   IUpdateContentDto,
 } from "../dto/content";
 import { Content } from "@prisma/client";
+import { IMessageDto } from "../dto/message";
 
 export interface IUserHandler {
   registration: RequestHandler<{}, IUserDto | IErrorDto, ICreateUserDto>;
   login: RequestHandler<{}, ICredentialDto | IErrorDto, ILoginDto>;
-  logout: RequestHandler<{}, IErrorDto, undefined, undefined, AuthStatus>;
+  logout: RequestHandler<{}, IMessageDto, undefined, undefined, AuthStatus>;
   gerPersonalInfo: RequestHandler<
     {},
     IUserDto | IErrorDto,

@@ -1,5 +1,5 @@
 import { PrismaClient, User } from "@prisma/client";
-import { IUser, IUserRepository } from ".";
+import { IBlacklistRepository, IUser, IUserRepository } from ".";
 import { ICreateUserDto } from "../dto/user";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
