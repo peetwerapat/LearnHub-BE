@@ -17,7 +17,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=academy
     volumes:
-      - learnhub-db-vol:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
   cache:
@@ -25,5 +25,4 @@ services:
     expose:
       - 6379
 volumes:
-  learnhub-db-vol:
-    name: bc1552d48e8c75194156a07517d2613fb839fec8126dd26faaa60199596d2a28
+  db-data:
