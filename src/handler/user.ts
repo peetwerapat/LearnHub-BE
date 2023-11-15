@@ -5,13 +5,13 @@ import { IBlacklistRepository, IUserRepository } from "../repositories";
 import { hashPassword, verifyPassword } from "../utils/bcrypt";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { JWT_SECRET } from "../utils/const";
-import { sign } from "jsonwebtoken";
+import { JwtPayload, sign, verify } from "jsonwebtoken";
 
 export default class UserHandler implements IUserHandler {
-  constructor(private repo: IUserRepository, blacklistRepo: IBlacklistRepository) {
-    this.repo = repo;
-    this.
-  }
+  constructor(
+    private repo: IUserRepository,
+    private blacklistRepo: IBlacklistRepository
+  ) {}
 
   public gerPersonalInfo: IUserHandler["gerPersonalInfo"] = async (
     req,
@@ -60,7 +60,48 @@ export default class UserHandler implements IUserHandler {
   };
 
   public logout: IUserHandler["logout"] = async (req, res) => {
-    const { use };
+    try {
+      const authHeader = req.header("Authorization");
+
+      if (!authHeader)
+        return res
+          .status(400)
+          .json({
+            message: "Authorization header is expected",
+          })
+          .end();
+
+      const authToken = req
+        .header("Authorization")!
+        .replace("Bearer ", "")
+        .trim();
+
+      const { exp } = verify(authToken, JWT_SECRET) as JwtPayload;
+      if (!exp)
+        return res
+          .status(400)
+          .json({
+            message: "JWT is invalid",
+          })
+          .end();
+
+      await this.blacklistRepo.addToBlacklist(authToken, exp * 1000);
+
+      return res
+        .status(200)
+        .json({
+          message: "You've been logged out",
+        })
+        .end();
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({
+          message: "Internal Server Error",
+        })
+        .end();
+    }
   };
 
   //public registration: RequestHandler<{}, IUserDto | IErrorDto, ICreateUserDto> // * Full Syntax
