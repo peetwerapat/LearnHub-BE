@@ -13,6 +13,7 @@ import { Content } from "@prisma/client";
 export interface IUserHandler {
   registration: RequestHandler<{}, IUserDto | IErrorDto, ICreateUserDto>;
   login: RequestHandler<{}, ICredentialDto | IErrorDto, ILoginDto>;
+  logout: RequestHandler<{}, IErrorDto, undefined, undefined, AuthStatus>;
   gerPersonalInfo: RequestHandler<
     {},
     IUserDto | IErrorDto,

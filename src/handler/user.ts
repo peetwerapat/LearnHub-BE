@@ -1,15 +1,16 @@
 import { RequestHandler } from "express";
 import { IUserHandler } from ".";
 import { ICreateUserDto, IUserDto } from "../dto/user";
-import { IUserRepository } from "../repositories";
+import { IBlacklistRepository, IUserRepository } from "../repositories";
 import { hashPassword, verifyPassword } from "../utils/bcrypt";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { JWT_SECRET } from "../utils/const";
 import { sign } from "jsonwebtoken";
 
 export default class UserHandler implements IUserHandler {
-  constructor(private repo: IUserRepository) {
+  constructor(private repo: IUserRepository, blacklistRepo: IBlacklistRepository) {
     this.repo = repo;
+    this.
   }
 
   public gerPersonalInfo: IUserHandler["gerPersonalInfo"] = async (
@@ -56,6 +57,10 @@ export default class UserHandler implements IUserHandler {
         .json({ message: "Invalid username or password" })
         .end();
     }
+  };
+
+  public logout: IUserHandler["logout"] = async (req, res) => {
+    const { use };
   };
 
   //public registration: RequestHandler<{}, IUserDto | IErrorDto, ICreateUserDto> // * Full Syntax
